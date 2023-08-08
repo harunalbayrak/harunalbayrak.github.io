@@ -1,4 +1,4 @@
-<img src="{{ .Get "src"}}"
+<img lazy="true" src="{{ .Get "src"}}"
     {{ if .Get "title"}}
         alt="{{.Get "title"}}"
     {{end}}

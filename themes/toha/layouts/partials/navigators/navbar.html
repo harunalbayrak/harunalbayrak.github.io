@@ -51,7 +51,7 @@
   <div class="container">
     <a class="navbar-brand" href="{{ site.BaseURL | relLangURL }}">
       {{ if $invertedLogo }}
-        <img src="{{ $invertedLogo }}" id="logo" alt="Logo">
+        <img lazy="true" src="{{ $invertedLogo }}" id="logo" alt="Logo">
       {{ end }}
       {{- site.Title -}}
     </a>
@@ -132,9 +132,9 @@
   </div>
   <!-- Store the logo information in a hidden img for the JS -->
   {{ if $mainLogo }}
-    <img src="{{ $mainLogo }}" class="d-none" id="main-logo" alt="Logo">
+    <img lazy="true" src="{{ $mainLogo }}" class="d-none" id="main-logo" alt="Logo">
   {{ end }}
   {{ if $invertedLogo }}
-    <img src="{{ $invertedLogo }}" class="d-none" id="inverted-logo" alt="Inverted Logo">
+    <img lazy="true" src="{{ $invertedLogo }}" class="d-none" id="inverted-logo" alt="Inverted Logo">
   {{ end }}
 </nav>

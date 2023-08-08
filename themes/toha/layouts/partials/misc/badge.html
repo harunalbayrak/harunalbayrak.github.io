@@ -3,7 +3,7 @@
     {{/* Verifiable certificate badge from https://www.credly.com */}}
     <div class="">
       <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">
-       <img src="{{ .badge }}" alt="{{ .name }}" />
+       <img lazy="true" src="{{ .badge }}" alt="{{ .name }}" />
       </a>
     </div>
 {{ else if eq .type "soft-skill-indicator" }}
