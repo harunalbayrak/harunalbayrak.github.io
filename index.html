@@ -109,6 +109,32 @@
       text-decoration: underline;
       text-underline-offset: 3px;
     }
+
+    /* Section dividers — subtle, not heavy */
+    section + section,
+    header + section {
+      position: relative;
+    }
+    section + section::before,
+    header + section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: var(--space-lg);
+      right: var(--space-lg);
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Responsive typography */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      .container {
+        padding: 0 var(--space-md);
+      }
+    }
   </style>
 </head>
 <body>
