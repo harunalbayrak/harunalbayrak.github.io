@@ -68,6 +68,11 @@
       transform: translateY(0);
     }
 
+    /* Stagger children within each section */
+    .reveal:nth-child(2) { transition-delay: 100ms; }
+    .reveal:nth-child(3) { transition-delay: 200ms; }
+    .reveal:nth-child(4) { transition-delay: 300ms; }
+
     /* Project cards */
     .project-card {
       padding: var(--space-lg);
@@ -226,17 +231,22 @@
   </footer>
 
   <script>
-    // Scroll-reveal with IntersectionObserver
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    if (!prefersReducedMotion) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
   </script>
 
 </body>
