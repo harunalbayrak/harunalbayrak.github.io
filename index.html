@@ -67,6 +67,48 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Project cards */
+    .project-card {
+      padding: var(--space-lg);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .project-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .project-card a:hover {
+      color: var(--accent);
+    }
+
+    /* Blog cards */
+    .blog-card {
+      padding: var(--space-md) var(--space-sm);
+      border-left: 2px solid transparent;
+      transition: border-color var(--transition), padding-left var(--transition);
+    }
+    .blog-card:hover {
+      border-left-color: var(--accent);
+      padding-left: var(--space-md);
+    }
+    .blog-card a:hover {
+      color: var(--accent);
+    }
+
+    /* Social links */
+    #social a:hover {
+      color: var(--accent);
+    }
+
+    /* Contact link */
+    footer a[href^="mailto"]:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
   </style>
 </head>
 <body>
