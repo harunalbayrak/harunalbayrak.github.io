@@ -1,0 +1,112 @@
+---
+export interface Post {
+  filename: string;
+  title: string;
+  description: string;
+  href: string;
+  date: Date;
+}
+
+export interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<section id="writing" class="section">
+  <div class="container--wide">
+    <p class="section-label reveal">// writing</p>
+    <div class="writing-list">
+      {posts.map((post) => (
+        <div class="reveal" data-reveal>
+          <a href={post.href} class="writing-card">
+            <div class="writing-card__top">
+              <span class="writing-card__filename">{post.filename}</span>
+              <time datetime={post.date.toISOString()} class="writing-card__date">
+                {post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </div>
+            <h3 class="writing-card__title">{post.title}</h3>
+            <p class="writing-card__desc">{post.description}</p>
+          </a>
+        </div>
+      ))}
+    </div>
+    <div class="reveal" data-reveal style="margin-top: var(--space-xl);">
+      <a href="/blog" class="link link--underline" style="font-weight: var(--weight-medium);">
+        All posts &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .writing-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .writing-card {
+    display: block;
+    padding-block: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: transform var(--transition-fast), background var(--transition-fast);
+    padding-inline: var(--space-md);
+    margin-inline: calc(-1 * var(--space-md));
+    border-radius: var(--radius-md);
+  }
+
+  .writing-card:last-child {
+    border-bottom: none;
+  }
+
+  .writing-card:hover {
+    transform: translateX(4px);
+    background: var(--color-bg-subtle);
+  }
+
+  .writing-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
+  }
+
+  .writing-card__filename {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    transition: color var(--transition-fast);
+  }
+
+  .writing-card:hover .writing-card__filename {
+    color: var(--color-accent-hover);
+  }
+
+  .writing-card__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .writing-card__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+    transition: color var(--transition-fast);
+  }
+
+  .writing-card:hover .writing-card__title {
+    color: var(--color-accent);
+  }
+
+  .writing-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+</style>

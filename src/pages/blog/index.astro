@@ -13,9 +13,8 @@ const sortedPosts = allPosts.sort(
   description="Thoughts on software engineering, design, and the craft of building things."
 >
   <section class="blog-listing section">
-    <div class="container">
-      <p class="section-subtitle reveal">Writing</p>
-      <h1 class="blog-listing__title reveal">All Posts</h1>
+    <div class="container--wide">
+      <p class="section-label reveal">// writing</p>
       <div class="blog-listing__posts">
         {sortedPosts.map((post) => {
           const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
@@ -24,19 +23,14 @@ const sortedPosts = allPosts.sort(
             day: 'numeric',
           });
 
+          const slug = post.id.replace(/\.md$/, '');
+
           return (
             <article class="blog-listing__card reveal" data-reveal>
-              <a href={`/blog/${post.id.replace(/\.md$/, '')}`} class="blog-listing__card-link">
-                <div class="blog-listing__card-meta">
+              <a href={`/blog/${slug}`} class="blog-listing__card-link">
+                <div class="blog-listing__card-top">
+                  <span class="blog-listing__card-filename">{slug}.md</span>
                   <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
-                  {post.data.tags.length > 0 && (
-                    <>
-                      <span class="blog-listing__separator">&middot;</span>
-                      <span class="blog-listing__tags">
-                        {post.data.tags.slice(0, 2).join(', ')}
-                      </span>
-                    </>
-                  )}
                 </div>
                 <h2 class="blog-listing__card-title">{post.data.title}</h2>
                 <p class="blog-listing__card-desc">{post.data.description}</p>
@@ -64,7 +58,12 @@ const sortedPosts = allPosts.sort(
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      if (!el.hasAttribute('data-delay')) {
+        el.setAttribute('data-delay', String(i * 60));
+      }
+      observer.observe(el);
+    });
   } else {
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
   }
@@ -76,56 +75,73 @@ const sortedPosts = allPosts.sort(
     padding-bottom: var(--space-4xl);
   }
 
-  .blog-listing__title {
-    font-family: var(--font-serif);
-    font-size: var(--text-3xl);
-    font-weight: 600;
-    margin-bottom: var(--space-2xl);
-  }
-
   .blog-listing__posts {
     display: flex;
     flex-direction: column;
+    gap: var(--space-md);
   }
 
   .blog-listing__card {
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .blog-listing__card:last-child {
     border-bottom: none;
   }
 
   .blog-listing__card-link {
     display: block;
-    padding-block: var(--space-xl);
+    padding: var(--space-xl);
+    margin-inline: calc(-1 * var(--space-lg));
+    border-radius: var(--radius-lg);
     text-decoration: none;
-    transition: transform var(--transition-fast);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), background var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
   }
 
   .blog-listing__card-link:hover {
-    transform: translateX(2px);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-accent);
   }
 
-  .blog-listing__card-meta {
+  .blog-listing__card {
+    border-bottom: none;
+    padding-bottom: var(--space-md);
+  }
+
+  .blog-listing__card:last-child {
+    padding-bottom: 0;
+  }
+
+  .blog-listing__card-top {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-sm);
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
   }
 
-  .blog-listing__separator {
-    opacity: 0.5;
+  .blog-listing__card-filename {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    transition: color var(--transition-fast);
+  }
+
+  .blog-listing__card-link:hover .blog-listing__card-filename {
+    color: var(--color-accent-hover);
+  }
+
+  .blog-listing__card-top time {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
   }
 
   .blog-listing__card-title {
     font-family: var(--font-sans);
-    font-size: var(--text-xl);
-    font-weight: 600;
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
     color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-xs);
     transition: color var(--transition-fast);
   }
 
@@ -134,14 +150,14 @@ const sortedPosts = allPosts.sort(
   }
 
   .blog-listing__card-desc {
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     color: var(--color-text-secondary);
   }
 
   .reveal {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .reveal.visible {

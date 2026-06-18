@@ -1,9 +1,9 @@
 ---
 const navLinks = [
-  { href: '/#about', label: 'About' },
-  { href: '/#projects', label: 'Projects' },
-  { href: '/blog', label: 'Writing' },
-  { href: '/#contact', label: 'Contact' },
+  { href: '/#about', label: 'about' },
+  { href: '/#experience', label: 'experience' },
+  { href: '/blog', label: 'blog' },
+  { href: '/#stack', label: 'stack' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -12,8 +12,7 @@ const currentPath = Astro.url.pathname;
 <header class="header" id="site-header">
   <div class="header__inner container--wide">
     <a href="/" class="header__logo" aria-label="Home">
-      <span class="header__logo-mark">H</span>
-      <span class="header__logo-text">harun.</span>
+      harunalbayrak<span class="header__logo-dot">.dev</span>
     </a>
 
     <nav class="header__nav" aria-label="Main navigation">
@@ -30,6 +29,11 @@ const currentPath = Astro.url.pathname;
         ))}
       </ul>
     </nav>
+
+    <a href="mailto:0albayrakharun@gmail.com" class="header__email">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      <span class="header__email-text">contact</span>
+    </a>
 
     <button
       class="header__menu-btn"
@@ -51,6 +55,10 @@ const currentPath = Astro.url.pathname;
           </li>
         ))}
       </ul>
+      <a href="mailto:0albayrakharun@gmail.com" class="header__mobile-email">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        contact
+      </a>
     </nav>
   </div>
 </header>
@@ -58,6 +66,7 @@ const currentPath = Astro.url.pathname;
 <script>
   const menuBtn = document.querySelector('.header__menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
+  const header = document.querySelector('.header');
   let isOpen = false;
 
   menuBtn?.addEventListener('click', () => {
@@ -76,6 +85,39 @@ const currentPath = Astro.url.pathname;
       document.body.style.overflow = '';
     });
   });
+
+  // Header shrink on scroll
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (scrollY > 100) {
+      header?.classList.add('header--scrolled');
+    } else {
+      header?.classList.remove('header--scrolled');
+    }
+    lastScroll = scrollY;
+  }, { passive: true });
+
+  // Scroll-spy: highlight active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.header__link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach((section) => {
+      const top = section.getBoundingClientRect().top + window.scrollY - 120;
+      if (window.scrollY >= top) {
+        current = section.getAttribute('id') || '';
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove('header__link--active');
+      if (link.getAttribute('href') === '/#' + current) {
+        link.classList.add('header__link--active');
+      }
+    });
+  }, { passive: true });
 </script>
 
 <style>
@@ -83,10 +125,16 @@ const currentPath = Astro.url.pathname;
     position: sticky;
     top: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .header--scrolled {
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
 
   .header__inner {
@@ -100,68 +148,88 @@ const currentPath = Astro.url.pathname;
   .header__logo {
     display: flex;
     align-items: baseline;
-    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
     text-decoration: none;
     transition: opacity var(--transition-fast);
   }
 
-  .header__logo:hover {
-    opacity: 0.8;
-  }
-
-  .header__logo-mark {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: var(--text-xl);
+  .header__logo-dot {
     color: var(--color-accent);
+    font-weight: var(--weight-medium);
   }
 
-  .header__logo-text {
-    font-family: var(--font-sans);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--color-text-primary);
+  .header__logo:hover {
+    opacity: 0.75;
   }
 
   /* Desktop Nav */
   .header__nav {
     display: flex;
     align-items: center;
+    background: var(--color-bg-subtle);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    border: 1px solid var(--color-border);
   }
 
   .header__links {
     display: flex;
-    gap: var(--space-lg);
+    gap: 2px;
   }
 
   .header__link {
     font-size: var(--text-sm);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color var(--transition-fast);
-    position: relative;
+    padding: 0.35em 1em;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
   }
 
-  .header__link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1.5px;
-    background: var(--color-accent);
-    transition: width var(--transition-base);
-  }
-
-  .header__link:hover,
-  .header__link--active {
+  .header__link:hover {
     color: var(--color-text-primary);
+    background: var(--color-bg-elevated);
+    box-shadow: var(--shadow-sm);
   }
 
-  .header__link:hover::after,
-  .header__link--active::after {
-    width: 100%;
+  .header__link--active {
+    color: var(--color-accent);
+    background: var(--color-bg-elevated);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Email pill */
+  .header__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-bg-elevated);
+    background: var(--color-text-primary);
+    padding: 0.45em 1em;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .header__email svg {
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+  }
+
+  .header__email:hover {
+    background: #000;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .header__email:hover svg {
+    opacity: 1;
   }
 
   /* Mobile Menu Button */
@@ -224,24 +292,59 @@ const currentPath = Astro.url.pathname;
   .header__mobile-links {
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
 
   .header__mobile-link {
+    display: block;
     font-size: var(--text-lg);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color var(--transition-fast);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
   }
 
   .header__mobile-link:hover {
-    color: var(--color-text-primary);
+    color: var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .header__mobile-link--active {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
+  .header__mobile-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: var(--space-lg);
+    margin-left: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-bg-elevated);
+    background: var(--color-text-primary);
+    padding: 0.5em 1em;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+  }
+
+  /* Scrolled state */
+  .header--scrolled .header__inner {
+    height: 3rem;
+  }
+
+  .header__inner {
+    transition: height var(--transition-base);
   }
 
   /* Responsive */
   @media (max-width: 768px) {
-    .header__nav {
+    .header__nav,
+    .header__email,
+    .header__email-text {
       display: none;
     }
 

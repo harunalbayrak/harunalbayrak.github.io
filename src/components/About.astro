@@ -1,0 +1,41 @@
+---
+---
+
+<section id="about" class="section">
+  <div class="container--wide">
+    <p class="section-label reveal">// about</p>
+    <div class="about-grid reveal" data-reveal>
+      <p class="about-text">
+        Computer Engineering graduate from <strong>Gebze Technical University</strong>, now building cloud infrastructure at <strong>TÜBİTAK</strong>. I spend my days wrangling Kubernetes clusters, automating deployments, and contributing to the <strong>OpenStack</strong> ecosystem.
+      </p>
+      <p class="about-text">
+        I believe infrastructure should be invisible — the best deployments are the ones nobody notices. When I'm not breaking production, I'm pursuing an M.Sc. at <strong>Kocaeli University</strong> and tinkering with Go and cloud-native tooling.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  .about-text {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .about-text strong {
+    color: var(--color-text-primary);
+    font-weight: var(--weight-medium);
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,39 +1,44 @@
 /* ──────────────────────────────────────────────
-   Design Tokens
+   Design Tokens — Mineral
    ────────────────────────────────────────────── */
 :root {
   /* Colors */
   --color-bg:              #FAFAF8;
-  --color-bg-subtle:       #F5F5F0;
+  --color-bg-subtle:       #F2F1ED;
   --color-bg-elevated:      #FFFFFF;
-  --color-text-primary:    #1A1A18;
-  --color-text-secondary:  #6B6B65;
-  --color-text-tertiary:    #9C9C94;
-  --color-accent:           #B8734A;
-  --color-accent-hover:     #A0623B;
-  --color-border:           #E8E8E4;
+  --color-text-primary:    #1C1917;
+  --color-text-secondary:  #78716C;
+  --color-text-tertiary:    #A8A29E;
+  --color-accent:           #0D9488;
+  --color-accent-hover:     #0F766E;
+  --color-accent-subtle:    #F0FDFA;
+  --color-border:           #D4D4D0;
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg:  0 8px 30px rgba(0, 0, 0, 0.10);
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg:  0 8px 30px rgba(0, 0, 0, 0.08);
 
   /* Typography */
-  --font-serif:  'Lora', Georgia, serif;
-  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:  'SF Mono', 'Fira Code', 'Consolas', monospace;
 
-  --text-xs:   0.75rem;
-  --text-sm:   0.875rem;
-  --text-base: 1rem;
-  --text-lg:   1.125rem;
-  --text-xl:   1.5rem;
-  --text-2xl:  2rem;
-  --text-3xl:  2.5rem;
-  --text-4xl:  3rem;
+  --text-xs:   0.75rem;     /* 12px — eyebrow, badges */
+  --text-sm:   0.875rem;    /* 14px — secondary */
+  --text-base: 1rem;        /* 16px — body */
+  --text-md:   1.125rem;    /* 18px — card titles */
+  --text-lg:   1.375rem;    /* 22px — section heads */
+  --text-xl:   1.75rem;     /* 28px — section titles */
+  --text-2xl:  2.5rem;      /* 40px — hero headline */
 
-  --leading-tight:  1.2;
+  --leading-tight:  1.15;
   --leading-normal: 1.7;
   --leading-relaxed: 1.85;
+
+  --weight-normal:  400;
+  --weight-medium:  500;
+  --weight-semibold: 550;
+  --weight-bold:    600;
 
   /* Spacing */
   --space-xs:   0.25rem;
@@ -56,8 +61,9 @@
 
   /* Border Radius */
   --radius-sm:  4px;
-  --radius-md:  8px;
-  --radius-lg:  12px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-full: 999px;
 }
 
 /* ──────────────────────────────────────────────
@@ -75,6 +81,25 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
   -webkit-text-size-adjust: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
 }
 
 body {
@@ -86,6 +111,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  position: relative;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 img,
@@ -119,12 +155,13 @@ button {
    Typography Utilities
    ────────────────────────────────────────────── */
 h1, h2, h3, h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
   color: var(--color-text-primary);
 }
 
-h1 { font-size: var(--text-4xl); }
+h1 { font-size: var(--text-2xl); }
 h2 { font-size: var(--text-xl); }
 h3 { font-size: var(--text-lg); }
 
@@ -151,8 +188,57 @@ p {
   padding-block: var(--space-3xl);
 }
 
-.section + .section {
-  border-top: 1px solid var(--color-border);
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-border) 20%,
+    var(--color-border) 80%,
+    transparent 100%
+  );
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────
+   Section Headers — code comment style
+   ────────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.4;
+}
+
+.section-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-xl);
+  color: var(--color-text-primary);
+}
+
+/* Eyebrow — monospace, tracked out, uppercase */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: var(--weight-medium);
 }
 
 /* ──────────────────────────────────────────────
@@ -171,42 +257,52 @@ p {
 }
 
 /* ──────────────────────────────────────────────
-   Section Headers
+   Pill Badge
    ────────────────────────────────────────────── */
-.section-title {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  font-weight: 500;
-  margin-bottom: var(--space-xl);
-  color: var(--color-text-primary);
+.pill {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 0.15em 0.65em;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-subtle);
+  color: var(--color-accent);
+  line-height: 1.5;
 }
 
-.section-subtitle {
-  font-family: var(--font-serif);
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: var(--space-sm);
+/* ──────────────────────────────────────────────
+   Shiki Code Theme (css-variables)
+   ────────────────────────────────────────────── */
+:root {
+  --shiki-color-text: var(--color-text-primary);
+  --shiki-color-background: var(--color-bg-subtle);
+  --shiki-token-constant: #CA8A04;
+  --shiki-token-string: #0D9488;
+  --shiki-token-comment: var(--color-text-tertiary);
+  --shiki-token-keyword: #0F766E;
+  --shiki-token-parameter: var(--color-text-secondary);
+  --shiki-token-function: var(--color-text-primary);
+  --shiki-token-string-expression: #0D9488;
+  --shiki-token-punctuation: var(--color-text-tertiary);
+  --shiki-token-link: var(--color-accent);
 }
 
 /* ──────────────────────────────────────────────
    Prose Styles (for blog post content)
    ────────────────────────────────────────────── */
 .prose {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   line-height: var(--leading-relaxed);
   color: var(--color-text-secondary);
 }
 
 .prose h2 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   margin-top: var(--space-3xl);
   margin-bottom: var(--space-lg);
 }
 
 .prose h3 {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   margin-top: var(--space-2xl);
   margin-bottom: var(--space-md);
 }
@@ -248,7 +344,7 @@ p {
 }
 
 .prose code {
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--color-bg-subtle);
   padding: 0.15em 0.4em;
@@ -257,8 +353,11 @@ p {
 
 .prose pre {
   margin: var(--space-2xl) 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow-x: auto;
+  background: var(--shiki-color-background) !important;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .prose pre code {
@@ -290,8 +389,8 @@ p {
     padding-block: var(--space-2xl);
   }
 
-  h1 { font-size: var(--text-3xl); }
-  h2 { font-size: var(--text-xl); }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: var(--text-lg); }
 }
 
 @media (max-width: 480px) {

@@ -1,0 +1,119 @@
+---
+export interface Cert {
+  logo: string;
+  logoAlt: string;
+  issuer: string;
+  title: string;
+  badge: string;
+}
+
+export interface Props {
+  items: Cert[];
+}
+
+const { items } = Astro.props;
+---
+
+<section id="certificates" class="section">
+  <div class="container--wide">
+    <p class="section-label reveal">// certificates</p>
+    <div class="certs-grid">
+      {items.map((cert) => (
+        <article class="cert-card reveal" data-reveal>
+          <div class="cert-card__logo">
+            <img src={cert.logo} alt={cert.logoAlt} width="56" height="28" />
+          </div>
+          <div class="cert-card__body">
+            <span class="cert-card__issuer">{cert.issuer}</span>
+            <h3 class="cert-card__title">{cert.title}</h3>
+            <span class="cert-card__badge">{cert.badge}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .cert-card {
+    display: flex;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cert-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .cert-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+  }
+
+  .cert-card:hover::before {
+    opacity: 1;
+  }
+
+  .cert-card__logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+  }
+
+  .cert-card__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .cert-card__issuer {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .cert-card__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    margin-top: 2px;
+    margin-bottom: 4px;
+  }
+
+  .cert-card__badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+  }
+</style>

@@ -12,6 +12,7 @@ export async function GET(context: APIContext) {
     title: 'Harun Albayrak — Writing',
     description: 'Thoughts on software engineering, design, and the craft of building things.',
     site: context.site!,
+    stylesheet: '/rss-stylesheet.xsl',
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,

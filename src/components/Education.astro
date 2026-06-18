@@ -1,0 +1,141 @@
+---
+export interface EducationItem {
+  school: string;
+  degree: string;
+  period: string;
+  description: string;
+}
+
+export interface Props {
+  items: EducationItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section id="education" class="section">
+  <div class="container--wide">
+    <p class="section-label reveal">// education</p>
+    <div class="edu-list">
+      {items.map((edu, i) => (
+        <div class="reveal" data-reveal data-delay={i * 100}>
+          <article class="edu-card">
+            <div class="edu-card__header">
+              <h3 class="edu-card__school">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="edu-card__icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                {edu.school}
+              </h3>
+              <div class="edu-card__period">
+                <span class="edu-card__dates">{edu.period}</span>
+              </div>
+            </div>
+            <span class="edu-card__degree">{edu.degree}</span>
+            <p class="edu-card__desc">{edu.description}</p>
+          </article>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .edu-card {
+    padding: var(--space-xl);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .edu-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+  }
+
+  .edu-card:hover::before {
+    opacity: 1;
+  }
+
+  .edu-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xs);
+  }
+
+  .edu-card__school {
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .edu-card__icon {
+    color: var(--color-accent);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .edu-card__period {
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .edu-card__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .edu-card__degree {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+
+  .edu-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    max-width: 600px;
+  }
+
+  @media (max-width: 768px) {
+    .edu-card__header {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .edu-card {
+      padding: var(--space-lg);
+    }
+  }
+</style>

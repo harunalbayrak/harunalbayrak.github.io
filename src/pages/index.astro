@@ -1,59 +1,113 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Education from '../components/Education.astro';
+import Experience from '../components/Experience.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import WritingPreview from '../components/WritingPreview.astro';
 import TechStack from '../components/TechStack.astro';
+import Certificates from '../components/Certificates.astro';
+
+const educationItems = [
+  {
+    school: 'Kocaeli University',
+    degree: 'M.Sc. in Software Engineering',
+    period: 'Sep 2024 – Present',
+    description: 'Advanced coursework in software architecture, distributed systems, and security engineering.',
+  },
+  {
+    school: 'Gebze Technical University',
+    degree: 'B.Sc. in Computer Engineering',
+    period: 'Sep 2017 – Jun 2022',
+    description: 'Graduated with a strong foundation in computer science. Key areas: data structures & algorithms, object-oriented programming, system programming (concurrency, threads, processes), and operating systems.',
+  },
+];
+
+const experienceItems = [
+  {
+    company: 'TÜBİTAK',
+    role: 'Software & DevOps Engineer',
+    period: 'Apr 2022 – Present',
+    duration: '4 years 2 months',
+    description: 'Working on Safir Cloud, a large-scale OpenStack-based cloud infrastructure. Automating deployments, building Kubernetes services, and designing GitOps pipelines for multi-cloud management.',
+    tags: ['Kubernetes', 'OpenStack', 'Go', 'Ansible', 'Terraform', 'ArgoCD'],
+  },
+  {
+    company: 'Berqnet',
+    role: 'DevOps Engineer (Part-Time)',
+    period: 'Jun 2021 – Feb 2022',
+    duration: '9 months',
+    description: 'Automated build and test pipelines for a FreeBSD-based firewall system. Built CI/CD workflows with Jenkins and containerized test environments with Docker.',
+    tags: ['Jenkins', 'Docker', 'Ansible', 'FreeBSD', 'Shell'],
+  },
+];
 
 const projects = [
   {
-    title: 'Project Name',
-    description: 'A brief description of what this project does and why it matters.',
+    filename: 'borsasentez.ts',
+    title: 'BorsaSentez',
+    description: 'A stock market analysis tool that helps investors make data-driven decisions. Built with a focus on clean UX and real-time data processing.',
     href: '#',
     tags: ['TypeScript', 'React'],
-    status: 'active' as const,
-  },
-  {
-    title: 'Another Project',
-    description: 'Building something interesting with modern tools and thoughtful design.',
-    href: '#',
-    tags: ['Python', 'PostgreSQL'],
     status: 'wip' as const,
   },
 ];
 
 const recentPosts = [
   {
+    filename: 'on-the-quiet-craft.md',
     title: 'On the Quiet Craft of Software',
-    description: 'Why the best engineering often goes unnoticed — and why that\'s the point.',
+    description: "Why the best engineering often goes unnoticed — and why that's the point.",
     href: '/blog/on-the-quiet-craft',
     date: new Date('2026-05-15'),
   },
   {
+    filename: 'tools-should-get-out.md',
     title: 'Tools Should Get Out of the Way',
     description: 'A reflection on developer experience and the tools we choose to keep.',
     href: '/blog/tools-should-get-out',
     date: new Date('2026-04-28'),
   },
   {
+    filename: 'thinking-in-systems.md',
     title: 'Thinking in Systems',
     description: 'How understanding feedback loops changed the way I design software.',
     href: '/blog/thinking-in-systems',
     date: new Date('2026-03-10'),
   },
 ];
+
+const certs = [
+  {
+    logo: '/lf-logo.png',
+    logoAlt: 'The Linux Foundation',
+    issuer: 'The Linux Foundation',
+    title: 'Certified Kubernetes Administrator',
+    badge: 'CKA',
+  },
+];
 ---
 
 <BaseLayout
   title="Harun Albayrak"
-  description="Full-stack software engineer building thoughtful products and writing about the craft of software."
+  description="Software & DevOps Engineer — cloud-native development, Kubernetes, OpenStack, and infrastructure automation."
 >
   <Hero />
 
-  <!-- Projects -->
+  <hr class="section-divider" />
+  <About />
+
+  <hr class="section-divider" />
+  <Experience items={experienceItems} />
+
+  <hr class="section-divider" />
+  <Education items={educationItems} />
+
+  <hr class="section-divider" />
   <section id="projects" class="section">
-    <div class="container">
-      <p class="section-subtitle reveal">Projects</p>
-      <h2 class="section-title reveal">Things I've Built</h2>
+    <div class="container--wide">
+      <p class="section-label reveal">// projects</p>
       <div class="projects-grid">
         {projects.map((project, i) => (
           <div class="reveal" data-reveal data-delay={i * 100}>
@@ -64,42 +118,17 @@ const recentPosts = [
     </div>
   </section>
 
-  <!-- Writing Preview -->
-  <section id="writing" class="section">
-    <div class="container">
-      <p class="section-subtitle reveal">Writing</p>
-      <h2 class="section-title reveal">Recent Posts</h2>
-      <div class="writing-list">
-        {recentPosts.map((post) => (
-          <div class="reveal" data-reveal>
-            <a href={post.href} class="writing-card">
-              <div class="writing-card__meta">
-                <time datetime={post.date.toISOString()}>
-                  {post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                </time>
-                <span class="writing-card__separator">&middot;</span>
-                <span>5 min read</span>
-              </div>
-              <h3 class="writing-card__title">{post.title}</h3>
-              <p class="writing-card__desc">{post.description}</p>
-            </a>
-          </div>
-        ))}
-      </div>
-      <div class="reveal" data-reveal style="margin-top: var(--space-xl);">
-        <a href="/blog" class="link link--underline" style="font-weight: 500;">
-          All posts &rarr;
-        </a>
-      </div>
-    </div>
-  </section>
+  <hr class="section-divider" />
+  <WritingPreview posts={recentPosts} />
 
-  <!-- Tech Stack -->
+  <hr class="section-divider" />
   <TechStack />
+
+  <hr class="section-divider" />
+  <Certificates items={certs} />
 </BaseLayout>
 
 <script>
-  // Scroll reveal (same as ScrollReveal component — inline for homepage)
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!prefersReducedMotion) {
@@ -117,7 +146,12 @@ const recentPosts = [
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
 
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      if (!el.hasAttribute('data-delay')) {
+        el.setAttribute('data-delay', String(i * 60));
+      }
+      observer.observe(el);
+    });
   } else {
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
   }
@@ -126,8 +160,8 @@ const recentPosts = [
 <style>
   .reveal {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .reveal.visible {
@@ -143,62 +177,17 @@ const recentPosts = [
     }
   }
 
-  /* Projects Grid */
   .projects-grid {
     display: grid;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
   }
 
-  /* Writing Cards */
-  .writing-list {
-    display: flex;
-    flex-direction: column;
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .writing-card {
-    display: block;
-    padding-block: var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
-    text-decoration: none;
-    transition: transform var(--transition-fast);
-  }
-
-  .writing-card:last-child {
-    border-bottom: none;
-  }
-
-  .writing-card:hover {
-    transform: translateX(2px);
-  }
-
-  .writing-card__meta {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-sm);
-  }
-
-  .writing-card__separator {
-    opacity: 0.5;
-  }
-
-  .writing-card__title {
-    font-family: var(--font-sans);
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    transition: color var(--transition-fast);
-  }
-
-  .writing-card:hover .writing-card__title {
-    color: var(--color-accent);
-  }
-
-  .writing-card__desc {
-    font-size: var(--text-base);
-    color: var(--color-text-secondary);
-  }
 </style>

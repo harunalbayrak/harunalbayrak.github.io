@@ -1,0 +1,259 @@
+---
+export interface Props {
+  items: {
+    company: string;
+    role: string;
+    period: string;
+    duration: string;
+    description: string;
+    tags: string[];
+  }[];
+}
+
+const { items } = Astro.props;
+
+const tagLogos: Record<string, string> = {
+  'Kubernetes': '/k8s-logo.png',
+  'OpenStack': '/openstack-logo.png',
+  'Go': '/go-logo.png',
+  'Ansible': '/ansible-logo.png',
+  'Terraform': '/terraform-logo.png',
+  'ArgoCD': '/argocd-logo.png',
+  'Jenkins': '/jenkins-logo.png',
+  'Docker': '/docker-logo.png',
+  'FreeBSD': '/freebsd-logo.png',
+};
+---
+
+<section id="experience" class="section">
+  <div class="container--wide">
+    <p class="section-label reveal">// experience</p>
+    <div class="experience-list">
+      {items.map((exp, i) => (
+        <div class="reveal" data-reveal data-delay={i * 100}>
+          <article class="exp-card">
+            <div class="exp-card__top">
+              <div class="exp-card__header">
+                <h3 class="exp-card__company">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="exp-card__icon"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+                  {exp.company}
+                </h3>
+                <span class="exp-card__role">{exp.role}</span>
+              </div>
+              <div class="exp-card__period">
+                <span class="exp-card__dates">{exp.period}</span>
+                <span class="exp-card__duration">{exp.duration}</span>
+              </div>
+            </div>
+            <p class="exp-card__desc">{exp.description}</p>
+            <div class="exp-card__tags">
+              {exp.tags.map((tag) => (
+                <span class="exp-card__tag">
+                  {tagLogos[tag] ? <img src={tagLogos[tag]} alt={tag} width="16" height="16" /> : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="m7 15 5-3 5 3"/></svg>
+                  )}
+                  <span>{tag}</span>
+                </span>
+              ))}
+            </div>
+          </article>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: var(--space-2xl);
+  }
+
+  .experience-list::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: var(--space-xl);
+    bottom: var(--space-xl);
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent) 0%,
+      var(--color-accent) 30%,
+      var(--color-border) 30%,
+      var(--color-border) 70%,
+      var(--color-accent) 70%,
+      var(--color-accent) 100%
+    );
+    opacity: 0.3;
+    border-radius: 1px;
+  }
+
+  .experience-list .reveal {
+    position: relative;
+    margin-bottom: var(--space-lg);
+  }
+
+  .experience-list .reveal::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--space-2xl) + 2px);
+    top: var(--space-xl);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-bg-elevated);
+    border: 2px solid var(--color-accent);
+    z-index: 1;
+    opacity: 0.5;
+    transition: opacity var(--transition-base), transform var(--transition-base);
+  }
+
+  .experience-list .reveal:hover::before {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+
+  .exp-card {
+    padding: var(--space-xl);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .exp-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+  }
+
+  .exp-card:hover::before {
+    opacity: 1;
+  }
+
+  .exp-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .exp-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .exp-card__company {
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .exp-card__icon {
+    color: var(--color-accent);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .exp-card__role {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .exp-card__period {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .exp-card__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .exp-card__duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+  }
+
+  .exp-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-md);
+    max-width: 640px;
+  }
+
+  .exp-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+
+  .exp-card__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 0.3em 0.7em;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .exp-card__tag img,
+  .exp-card__tag svg {
+    object-fit: contain;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .exp-card__top {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .exp-card {
+      padding: var(--space-lg);
+    }
+  }
+</style>

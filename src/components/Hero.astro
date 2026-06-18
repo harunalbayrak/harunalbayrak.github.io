@@ -1,104 +1,411 @@
 ---
 const ctaLinks = [
-  { href: '/#projects', label: 'See Projects', primary: false },
-  { href: '/blog', label: 'Read Writing', primary: true },
+  { href: '/#projects', label: 'View Projects', primary: true },
+  { href: '/blog', label: 'Read Blog', primary: false },
 ];
 ---
 
 <section class="hero" id="about">
-  <div class="hero__inner container section">
-    <p class="hero__greeting reveal">Hello, I'm</p>
-    <h1 class="hero__name reveal">Harun Albayrak</h1>
-    <p class="hero__tagline reveal">
-      A full-stack software engineer who builds thoughtful products and writes about the craft of making software. I care about clarity, simplicity, and the small details that make things feel right.
-    </p>
-    <div class="hero__actions reveal">
-      {ctaLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={['hero__cta', { 'hero__cta--primary': link.primary }]}
-        >
-          {link.label}
-        </a>
-      ))}
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__shape hero__shape--1"></div>
+    <div class="hero__shape hero__shape--2"></div>
+    <div class="hero__shape hero__shape--3"></div>
+    <div class="hero__shape hero__shape--4"></div>
+    <div class="hero__shape hero__shape--5"></div>
+    <canvas class="hero__canvas" id="hero-canvas"></canvas>
+  </div>
+  <div class="hero__inner container--wide section">
+    <div class="hero__grid">
+      <div class="hero__content">
+        <p class="hero__eyebrow reveal">Software & DevOps Engineer</p>
+        <h1 class="hero__headline reveal">
+          <span class="hl-line">Building things that</span>
+          <span class="hl-line">work, keeping them <span class="hl-accent">that way</span>.</span>
+        </h1>
+        <p class="hero__tagline reveal">
+          I design and operate cloud-native infrastructure that scales. Kubernetes, OpenStack, Go, and automation — 3+ years turning complex systems into reliable, boring deployments.
+        </p>
+        <p class="hero__currently reveal">
+          <span class="hero__currently-dot"></span>
+          Currently building cloud-native infrastructure at TÜBİTAK
+        </p>
+        <div class="hero__actions reveal">
+          {ctaLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={['hero__cta', { 'hero__cta--primary': link.primary }]}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="hero__visual reveal">
+        <div class="hero__terminal">
+          <div class="hero__terminal-bar">
+            <span class="hero__terminal-dot"></span>
+            <span class="hero__terminal-dot"></span>
+            <span class="hero__terminal-dot"></span>
+            <span class="hero__terminal-title">~/cloud-infra — zsh</span>
+          </div>
+          <div class="hero__terminal-body">
+            <p><span class="t-cmd">$</span> kubectl get pods -n production</p>
+            <p class="t-row"><span class="t-name">cloud-api</span> <span class="t-status t-ready">Ready</span> <span class="t-meta">2d</span></p>
+            <p class="t-row"><span class="t-name">infra-worker</span> <span class="t-status t-ready">Ready</span> <span class="t-meta">5h</span></p>
+            <p class="t-row"><span class="t-name">monitoring</span> <span class="t-status t-ready">Ready</span> <span class="t-meta">1d</span></p>
+            <p class="t-row"><span class="t-name">cache-layer</span> <span class="t-status t-scaling">Scaling</span> <span class="t-meta">10m</span></p>
+            <p><span class="t-cmd">$</span> <span class="t-cursor">_</span></p>
+          </div>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<script>
+  (function() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const hero = canvas.closest('.hero');
+    if (!hero) return;
+
+    let width, height;
+    let particles = [];
+    const PARTICLE_COUNT = 50;
+    const CONNECTION_DIST = 150;
+    const PARTICLE_SPEED = 0.25;
+
+    const PALETTES = [
+      [{ r: 13, g: 148, b: 136 }, { r: 232, g: 168, b: 56 }],
+      [{ r: 6, g: 182, b: 212 }, { r: 244, g: 63, b: 94 }],
+      [{ r: 99, g: 102, b: 241 }, { r: 251, g: 146, b: 60 }],
+      [{ r: 5, g: 150, b: 105 }, { r: 217, g: 119, b: 6 }],
+      [{ r: 124, g: 58, b: 237 }, { r: 20, g: 184, b: 166 }],
+      [{ r: 71, g: 85, b: 105 }, { r: 52, g: 211, b: 153 }],
+    ];
+
+    function resize() {
+      const rect = hero.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * (window.devicePixelRatio || 1);
+      canvas.height = height * (window.devicePixelRatio || 1);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+    }
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        const depth = Math.random();
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * PARTICLE_SPEED * (0.6 + depth * 0.8),
+          vy: (Math.random() - 0.5) * PARTICLE_SPEED * (0.6 + depth * 0.8),
+          r: depth > 0.7 ? 4 + Math.random() * 2 : depth > 0.3 ? 2 + Math.random() * 2 : 1 + Math.random() * 1.5,
+          color, depth,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x, dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECTION_DIST) {
+            const alpha = (1 - dist / CONNECTION_DIST) * 0.35;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${alpha})`;
+            ctx.lineWidth = 0.9; ctx.stroke();
+          }
+        }
+
+        const dotAlpha = 0.35 + p.depth * 0.5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${dotAlpha})`;
+        ctx.fill();
+        if (p.r > 3) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r + 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${dotAlpha * 0.2})`;
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    resize(); createParticles(); draw();
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+  })();
+</script>
+
 <style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 50% at 75% 10%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 55% 55% at 25% 85%, rgba(232, 168, 56, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 45% 45% at 60% 55%, rgba(99, 102, 241, 0.05) 0%, transparent 55%),
+      var(--color-bg);
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 55% 75% at 30% 45%, transparent 0%, transparent 25%, black 65%);
+    -webkit-mask-image: radial-gradient(ellipse 55% 75% at 30% 45%, transparent 0%, transparent 25%, black 65%);
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+
+  .hero__shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+  }
+  .hero__shape--1 { width: 600px; height: 600px; background: #14B8A6; opacity: 0.1; top: -25%; right: -15%; }
+  .hero__shape--2 { width: 450px; height: 450px; background: #E8A838; opacity: 0.08; bottom: -20%; left: -12%; }
+  .hero__shape--3 { width: 300px; height: 300px; background: #6366F1; opacity: 0.06; top: 50%; right: 30%; border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; }
+  .hero__shape--4 { width: 250px; height: 250px; background: #F43F5E; opacity: 0.05; bottom: 30%; left: 40%; border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; animation: hero-morph-1 10s ease-in-out infinite; }
+  .hero__shape--5 { width: 350px; height: 350px; background: #FB923C; opacity: 0.05; top: 20%; right: 45%; animation: hero-morph-2 12s ease-in-out infinite; }
+
+  @keyframes hero-morph-1 {
+    0%, 100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; transform: translate(0,0) scale(1); }
+    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: translate(15px,-20px) scale(1.1); }
+  }
+  @keyframes hero-morph-2 {
+    0%, 100% { border-radius: 50%; transform: translate(0,0); }
+    50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; transform: translate(-20px,-15px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__shape--4, .hero__shape--5 { animation: none; }
+  }
+
   .hero__inner {
-    padding-top: var(--space-4xl);
-    padding-bottom: var(--space-3xl);
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-2xl);
+    position: relative;
+    z-index: 1;
   }
 
-  .hero__greeting {
-    font-family: var(--font-serif);
-    font-size: var(--text-lg);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-sm);
+  /* Split layout */
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    align-items: center;
   }
 
-  .hero__name {
-    font-family: var(--font-serif);
-    font-size: var(--text-4xl);
-    font-weight: 600;
-    line-height: var(--leading-tight);
-    margin-bottom: var(--space-lg);
+  .hero__content {
+    max-width: 540px;
+  }
+
+  .hero__visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  /* Terminal */
+  .hero__terminal {
+    background: #0F1419;
+    border: 1px solid #2A2F36;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .hero__terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: #161B22;
+    border-bottom: 1px solid #2A2F36;
+  }
+
+  .hero__terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .hero__terminal-dot:nth-child(1) { background: #FF5F57; }
+  .hero__terminal-dot:nth-child(2) { background: #FEBC2E; }
+  .hero__terminal-dot:nth-child(3) { background: #28C840; }
+
+  .hero__terminal-title {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #8B949E;
+  }
+
+  .hero__terminal-body {
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.8;
+    color: #C9D1D9;
+  }
+
+  .hero__terminal-body p { white-space: nowrap; }
+  .t-cmd { color: #28C840; margin-right: 8px; }
+  .t-name { color: #58A6FF; display: inline-block; min-width: 110px; }
+  .t-ready { color: #28C840; }
+  .t-scaling { color: #E8A838; }
+  .t-meta { color: #484F58; margin-left: 4px; }
+  .t-row { opacity: 0.8; }
+  .t-cursor { color: #C9D1D9; animation: terminal-blink 1s step-end infinite; }
+
+  @keyframes terminal-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Typography */
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: var(--weight-medium);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero__headline {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xl);
+    letter-spacing: -0.02em;
+  }
+
+  .hl-line {
+    display: block;
+  }
+
+  .hl-accent {
+    color: var(--color-accent);
+    position: relative;
   }
 
   .hero__tagline {
-    font-size: var(--text-lg);
+    font-size: var(--text-md);
     color: var(--color-text-secondary);
-    max-width: 540px;
+    max-width: 560px;
     margin-bottom: var(--space-xl);
-    line-height: var(--leading-relaxed);
+    line-height: 1.75;
+  }
+
+  .hero__currently {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__currently-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
   .hero__actions {
     display: flex;
-    gap: var(--space-md);
+    gap: var(--space-sm);
     flex-wrap: wrap;
   }
 
   .hero__cta {
     display: inline-flex;
     align-items: center;
-    padding: var(--space-sm) var(--space-lg);
+    padding: 0.6em 1.4em;
     font-size: var(--text-sm);
-    font-weight: 500;
-    border-radius: var(--radius-md);
+    font-weight: var(--weight-medium);
+    border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
+    text-decoration: none;
   }
-
   .hero__cta--primary {
-    background: var(--color-accent);
+    background: var(--color-text-primary);
     color: #fff;
   }
-
   .hero__cta--primary:hover {
-    background: var(--color-accent-hover);
+    background: #000;
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
-
   .hero__cta:not(.hero__cta--primary) {
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
   }
-
   .hero__cta:not(.hero__cta--primary):hover {
-    border-color: var(--color-text-tertiary);
+    border-color: var(--color-text-primary);
     color: var(--color-text-primary);
     transform: translateY(-1px);
   }
 
+  @media (max-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+    .hero__visual {
+      display: none;
+    }
+    .hero__content {
+      max-width: none;
+    }
+  }
+
   @media (max-width: 768px) {
     .hero__inner {
-      padding-top: var(--space-3xl);
+      padding-top: var(--space-2xl);
     }
-
-    .hero__name {
-      font-size: var(--text-3xl);
+    .hero__headline {
+      font-size: 1.75rem;
     }
   }
 </style>

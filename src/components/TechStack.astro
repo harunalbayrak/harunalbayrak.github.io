@@ -2,34 +2,83 @@
 const categories = [
   {
     label: 'Languages',
-    items: ['TypeScript', 'Python', 'SQL'],
+    items: [
+      { name: 'Go', proficiency: 5 },
+      { name: 'Python', proficiency: 5 },
+      { name: 'TypeScript', proficiency: 3 },
+      { name: 'C', proficiency: 3 },
+      { name: 'C++', proficiency: 3 },
+      { name: 'Java', proficiency: 3 },
+      { name: 'Bash', proficiency: 4 },
+    ],
   },
   {
-    label: 'Frontend',
-    items: ['React', 'Next.js', 'Astro', 'HTML/CSS'],
+    label: 'Cloud & Infrastructure',
+    items: [
+      { name: 'Kubernetes', proficiency: 5 },
+      { name: 'OpenStack', proficiency: 5 },
+      { name: 'OpenShift', proficiency: 3 },
+      { name: 'AWS', proficiency: 3 },
+      { name: 'Docker', proficiency: 5 },
+      { name: 'Containerd', proficiency: 3 },
+      { name: 'LXC', proficiency: 3 },
+      { name: 'Terraform', proficiency: 4 },
+      { name: 'Ceph', proficiency: 4 },
+    ],
   },
   {
-    label: 'Backend & Data',
-    items: ['Node.js', 'PostgreSQL', 'Redis'],
+    label: 'DevOps & CI/CD',
+    items: [
+      { name: 'Ansible', proficiency: 5 },
+      { name: 'Jenkins', proficiency: 4 },
+      { name: 'ArgoCD', proficiency: 4 },
+      { name: 'GitOps', proficiency: 4 },
+      { name: 'Vagrant', proficiency: 3 },
+    ],
   },
   {
-    label: 'Tools & Cloud',
-    items: ['Docker', 'AWS', 'Git', 'Linux'],
+    label: 'Backend & Web',
+    items: [
+      { name: 'FastAPI', proficiency: 4 },
+      { name: 'Flask', proficiency: 4 },
+      { name: 'Django', proficiency: 3 },
+      { name: 'Gin', proficiency: 4 },
+      { name: 'Fiber', proficiency: 3 },
+      { name: 'Nginx', proficiency: 3 },
+      { name: 'Apache', proficiency: 3 },
+    ],
+  },
+  {
+    label: 'Data & Monitoring',
+    items: [
+      { name: 'MySQL', proficiency: 3 },
+      { name: 'MongoDB', proficiency: 3 },
+      { name: 'PostgreSQL', proficiency: 3 },
+      { name: 'OpenSearch', proficiency: 4 },
+      { name: 'ELK Stack', proficiency: 3 },
+      { name: 'Fluentd', proficiency: 4 },
+    ],
   },
 ];
 ---
 
-<section class="tech-stack" id="skills">
-  <div class="container section">
-    <p class="section-subtitle reveal">Technologies</p>
-    <h2 class="section-title reveal">Tools I Work With</h2>
+<section class="tech-stack" id="stack">
+  <div class="container--wide section">
+    <p class="section-label reveal">// stack</p>
     <div class="tech-stack__grid">
       {categories.map((category) => (
         <div class="tech-stack__category reveal">
           <h3 class="tech-stack__category-label">{category.label}</h3>
           <ul class="tech-stack__items">
             {category.items.map((item) => (
-              <li class="tech-stack__item">{item}</li>
+              <li class="tech-stack__item">
+                <span class="stack-name">{item.name}</span>
+                <span class="stack-dots" aria-label={`${item.proficiency} out of 5`}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span class:list={['stack-dot', { 'stack-dot--filled': i < item.proficiency }]}></span>
+                  ))}
+                </span>
+              </li>
             ))}
           </ul>
         </div>
@@ -41,17 +90,44 @@ const categories = [
 <style>
   .tech-stack__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-xl);
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-md);
   }
 
+  .tech-stack__category {
+    padding: var(--space-xl);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tech-stack__category::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .tech-stack__category:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+    border-color: var(--color-accent);
+  }
+
+  .tech-stack__category:hover::before { opacity: 1; }
+
   .tech-stack__category-label {
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-accent);
     margin-bottom: var(--space-md);
   }
 
@@ -62,14 +138,44 @@ const categories = [
   }
 
   .tech-stack__item {
-    font-size: var(--text-base);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
     color: var(--color-text-secondary);
-    padding: var(--space-xs) 0;
+    line-height: 1.5;
+  }
+
+  .stack-name {
+    flex-shrink: 0;
+  }
+
+  .stack-dots {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .stack-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--color-border);
+  }
+
+  .stack-dot--filled {
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 1024px) {
+    .tech-stack__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .tech-stack__grid { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 480px) {
-    .tech-stack__grid {
-      grid-template-columns: 1fr;
-    }
+    .tech-stack__grid { grid-template-columns: 1fr; }
   }
 </style>

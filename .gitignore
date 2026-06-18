@@ -22,6 +22,7 @@ package-lock.json
 .pnpm-store
 .vscode-test/
 .claude
+.superpowers
 
 # Build output
 docs/
