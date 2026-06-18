@@ -1,10 +1,33 @@
 # Dependencies
 node_modules/
+/triage/
+/.compiler/
+dist/
+temp/
+*.tsbuildinfo
+.DS_Store
+.vercel
+.netlify
+_site/
+.astro/
+scripts/smoke/*-main/
+scripts/memory/project/src/pages/
+benchmark/projects/
+benchmark/results/
+test-results/
+*.log
+package-lock.json
+.turbo/
+.eslintcache
+.pnpm-store
+.vscode-test/
+.claude
 
 # Build output
 docs/
 
 # IDE
+.claude
 .vscode/
 .idea/
 
@@ -14,3 +37,4 @@ Thumbs.db
 
 # Environment
 .env
+*.env
