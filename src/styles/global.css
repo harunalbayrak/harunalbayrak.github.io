@@ -382,7 +382,7 @@ p {
 @media (max-width: 768px) {
   .container,
   .container--wide {
-    padding-inline: var(--space-lg);
+    padding-inline: var(--space-xl);
   }
 
   .section {
@@ -391,11 +391,22 @@ p {
 
   h1 { font-size: 1.75rem; }
   h2 { font-size: var(--text-lg); }
+
+  .section-label {
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-lg);
+  }
 }
 
 @media (max-width: 480px) {
   .container,
   .container--wide {
-    padding-inline: var(--space-md);
+    padding-inline: var(--space-lg);
   }
+
+  .section {
+    padding-block: var(--space-xl);
+  }
+
+  h1 { font-size: 1.5rem; }
 }

@@ -69,21 +69,27 @@ const currentPath = Astro.url.pathname;
   const header = document.querySelector('.header');
   let isOpen = false;
 
+  function openMenu() {
+    isOpen = true;
+    menuBtn?.setAttribute('aria-expanded', 'true');
+    mobileMenu?.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    isOpen = false;
+    menuBtn?.setAttribute('aria-expanded', 'false');
+    mobileMenu?.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  }
+
   menuBtn?.addEventListener('click', () => {
-    isOpen = !isOpen;
-    menuBtn.setAttribute('aria-expanded', String(isOpen));
-    mobileMenu?.toggleAttribute('hidden', !isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    isOpen ? closeMenu() : openMenu();
   });
 
   // Close mobile menu when clicking a link
   mobileMenu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      isOpen = false;
-      menuBtn?.setAttribute('aria-expanded', 'false');
-      mobileMenu?.toggleAttribute('hidden', true);
-      document.body.style.overflow = '';
-    });
+    link.addEventListener('click', closeMenu);
   });
 
   // Header shrink on scroll
@@ -280,9 +286,25 @@ const currentPath = Astro.url.pathname;
   /* Mobile Menu Panel */
   .header__mobile-menu {
     display: none;
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--space-lg) var(--space-xl);
+    position: fixed;
+    top: 3.5rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    background: color-mix(in srgb, var(--color-bg) 97%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: var(--space-2xl) var(--space-xl);
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .header__mobile-menu:not([hidden]) {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .header__mobile-menu[hidden] {
@@ -292,26 +314,22 @@ const currentPath = Astro.url.pathname;
   .header__mobile-links {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-xs);
   }
 
   .header__mobile-link {
     display: block;
-    font-size: var(--text-lg);
-    font-weight: var(--weight-medium);
-    color: var(--color-text-secondary);
+    font-size: 1.5rem;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
     text-decoration: none;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-lg);
     transition: all var(--transition-fast);
   }
 
-  .header__mobile-link:hover {
-    color: var(--color-accent);
-    background: var(--color-bg-subtle);
-  }
-
-  .header__mobile-link--active {
+  .header__mobile-link:hover,
+  .header__mobile-link:active {
     color: var(--color-accent);
     background: var(--color-accent-subtle);
   }
@@ -319,14 +337,14 @@ const currentPath = Astro.url.pathname;
   .header__mobile-email {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-top: var(--space-lg);
-    margin-left: var(--space-md);
+    gap: 8px;
+    margin-top: var(--space-2xl);
+    margin-left: var(--space-lg);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--color-bg-elevated);
     background: var(--color-text-primary);
-    padding: 0.5em 1em;
+    padding: 0.6em 1.2em;
     border-radius: var(--radius-full);
     text-decoration: none;
   }
@@ -343,28 +361,12 @@ const currentPath = Astro.url.pathname;
   /* Responsive */
   @media (max-width: 768px) {
     .header__nav,
-    .header__email,
-    .header__email-text {
+    .header__email {
       display: none;
     }
 
     .header__menu-btn {
       display: flex;
-    }
-
-    .header__mobile-menu {
-      display: block;
-      position: fixed;
-      top: 3.5rem;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 99;
-      padding: var(--space-xl);
-    }
-
-    .header__mobile-menu[hidden] {
-      display: none;
     }
   }
 </style>
