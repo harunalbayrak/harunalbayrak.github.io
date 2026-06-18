@@ -26,7 +26,7 @@ const sortedPosts = allPosts.sort(
 
           return (
             <article class="blog-listing__card reveal" data-reveal>
-              <a href={`/blog/${post.id}`} class="blog-listing__card-link">
+              <a href={`/blog/${post.id.replace(/\.md$/, '')}`} class="blog-listing__card-link">
                 <div class="blog-listing__card-meta">
                   <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
                   {post.data.tags.length > 0 && (
