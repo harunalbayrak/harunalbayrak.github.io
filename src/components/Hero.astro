@@ -73,6 +73,9 @@ const ctaLinks = [
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
+    // Skip particle canvas on mobile — too cluttered
+    if (window.innerWidth < 768) return;
+
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -414,6 +417,17 @@ const ctaLinks = [
   }
 
   @media (max-width: 768px) {
+    .hero__shape,
+    .hero__canvas {
+      display: none;
+    }
+
+    .hero {
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 20%, rgba(20, 184, 166, 0.06) 0%, transparent 60%),
+        var(--color-bg);
+    }
+
     .hero__inner {
       padding-top: var(--space-2xl);
       padding-bottom: var(--space-xl);

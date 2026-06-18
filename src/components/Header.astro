@@ -244,8 +244,10 @@ const currentPath = Astro.url.pathname;
     width: 2.5rem;
     height: 2.5rem;
     position: relative;
-    justify-content: center;
-    align-items: center;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
     border-radius: var(--radius-md);
     transition: background var(--transition-fast);
   }
@@ -254,39 +256,45 @@ const currentPath = Astro.url.pathname;
     background: var(--color-bg-subtle);
   }
 
-  .header__menu-icon,
-  .header__menu-icon::before,
-  .header__menu-icon::after {
+  .header__menu-icon {
     display: block;
     width: 18px;
-    height: 1.5px;
+    height: 2px;
     background: var(--color-text-primary);
-    border-radius: 1px;
-    transition: transform 0.2s ease, top 0.2s ease, opacity 0.15s ease;
+    border-radius: 2px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: background 0.15s ease;
   }
 
   .header__menu-icon::before,
   .header__menu-icon::after {
     content: '';
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-text-primary);
+    border-radius: 2px;
     position: absolute;
     left: 0;
+    transition: transform 0.2s ease;
   }
 
-  .header__menu-icon::before { top: -6px; }
-  .header__menu-icon::after { top: 6px; }
+  .header__menu-icon::before { transform: translateY(-6px); }
+  .header__menu-icon::after  { transform: translateY(6px); }
 
   .header__menu-btn[aria-expanded='true'] .header__menu-icon {
     background: transparent;
   }
 
   .header__menu-btn[aria-expanded='true'] .header__menu-icon::before {
-    top: 0;
-    transform: rotate(45deg);
+    transform: translateY(0) rotate(45deg);
   }
 
   .header__menu-btn[aria-expanded='true'] .header__menu-icon::after {
-    top: 0;
-    transform: rotate(-45deg);
+    transform: translateY(0) rotate(-45deg);
   }
 
   /* Mobile Menu Panel */
