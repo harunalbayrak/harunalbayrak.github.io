@@ -1,0 +1,75 @@
+---
+const categories = [
+  {
+    label: 'Languages',
+    items: ['TypeScript', 'Python', 'SQL'],
+  },
+  {
+    label: 'Frontend',
+    items: ['React', 'Next.js', 'Astro', 'HTML/CSS'],
+  },
+  {
+    label: 'Backend & Data',
+    items: ['Node.js', 'PostgreSQL', 'Redis'],
+  },
+  {
+    label: 'Tools & Cloud',
+    items: ['Docker', 'AWS', 'Git', 'Linux'],
+  },
+];
+---
+
+<section class="tech-stack" id="skills">
+  <div class="container section">
+    <p class="section-subtitle reveal">Technologies</p>
+    <h2 class="section-title reveal">Tools I Work With</h2>
+    <div class="tech-stack__grid">
+      {categories.map((category) => (
+        <div class="tech-stack__category reveal">
+          <h3 class="tech-stack__category-label">{category.label}</h3>
+          <ul class="tech-stack__items">
+            {category.items.map((item) => (
+              <li class="tech-stack__item">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .tech-stack__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .tech-stack__category-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-md);
+  }
+
+  .tech-stack__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .tech-stack__item {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    padding: var(--space-xs) 0;
+  }
+
+  @media (max-width: 480px) {
+    .tech-stack__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
