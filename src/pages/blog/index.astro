@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Thoughts on software engineering, design, and the craft of building things."
+>
+  <section class="blog-listing section">
+    <div class="container">
+      <p class="section-subtitle reveal">Writing</p>
+      <h1 class="blog-listing__title reveal">All Posts</h1>
+      <div class="blog-listing__posts">
+        {sortedPosts.map((post) => {
+          const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+
+          return (
+            <article class="blog-listing__card reveal" data-reveal>
+              <a href={`/blog/${post.id}`} class="blog-listing__card-link">
+                <div class="blog-listing__card-meta">
+                  <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+                  {post.data.tags.length > 0 && (
+                    <>
+                      <span class="blog-listing__separator">&middot;</span>
+                      <span class="blog-listing__tags">
+                        {post.data.tags.slice(0, 2).join(', ')}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <h2 class="blog-listing__card-title">{post.data.title}</h2>
+                <p class="blog-listing__card-desc">{post.data.description}</p>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+  }
+</script>
+
+<style>
+  .blog-listing {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .blog-listing__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .blog-listing__posts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-listing__card {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .blog-listing__card:last-child {
+    border-bottom: none;
+  }
+
+  .blog-listing__card-link {
+    display: block;
+    padding-block: var(--space-xl);
+    text-decoration: none;
+    transition: transform var(--transition-fast);
+  }
+
+  .blog-listing__card-link:hover {
+    transform: translateX(2px);
+  }
+
+  .blog-listing__card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .blog-listing__separator {
+    opacity: 0.5;
+  }
+
+  .blog-listing__card-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .blog-listing__card-link:hover .blog-listing__card-title {
+    color: var(--color-accent);
+  }
+
+  .blog-listing__card-desc {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
