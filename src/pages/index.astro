@@ -1,8 +1,204 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TechStack from '../components/TechStack.astro';
+
+const projects = [
+  {
+    title: 'Project Name',
+    description: 'A brief description of what this project does and why it matters.',
+    href: '#',
+    tags: ['TypeScript', 'React'],
+    status: 'active' as const,
+  },
+  {
+    title: 'Another Project',
+    description: 'Building something interesting with modern tools and thoughtful design.',
+    href: '#',
+    tags: ['Python', 'PostgreSQL'],
+    status: 'wip' as const,
+  },
+];
+
+const recentPosts = [
+  {
+    title: 'On the Quiet Craft of Software',
+    description: 'Why the best engineering often goes unnoticed — and why that\'s the point.',
+    href: '/blog/on-the-quiet-craft',
+    date: new Date('2026-05-15'),
+  },
+  {
+    title: 'Tools Should Get Out of the Way',
+    description: 'A reflection on developer experience and the tools we choose to keep.',
+    href: '/blog/tools-should-get-out',
+    date: new Date('2026-04-28'),
+  },
+  {
+    title: 'Thinking in Systems',
+    description: 'How understanding feedback loops changed the way I design software.',
+    href: '/blog/thinking-in-systems',
+    date: new Date('2026-03-10'),
+  },
+];
 ---
-<BaseLayout title="Harun Albayrak" description="Software Engineer">
-  <div class="container section">
-    <p>Layout works.</p>
-  </div>
+
+<BaseLayout
+  title="Harun Albayrak"
+  description="Full-stack software engineer building thoughtful products and writing about the craft of software."
+>
+  <Hero />
+
+  <!-- Projects -->
+  <section id="projects" class="section">
+    <div class="container">
+      <p class="section-subtitle reveal">Projects</p>
+      <h2 class="section-title reveal">Things I've Built</h2>
+      <div class="projects-grid">
+        {projects.map((project, i) => (
+          <div class="reveal" data-reveal data-delay={i * 100}>
+            <ProjectCard {...project} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Writing Preview -->
+  <section id="writing" class="section">
+    <div class="container">
+      <p class="section-subtitle reveal">Writing</p>
+      <h2 class="section-title reveal">Recent Posts</h2>
+      <div class="writing-list">
+        {recentPosts.map((post) => (
+          <div class="reveal" data-reveal>
+            <a href={post.href} class="writing-card">
+              <div class="writing-card__meta">
+                <time datetime={post.date.toISOString()}>
+                  {post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </time>
+                <span class="writing-card__separator">&middot;</span>
+                <span>5 min read</span>
+              </div>
+              <h3 class="writing-card__title">{post.title}</h3>
+              <p class="writing-card__desc">{post.description}</p>
+            </a>
+          </div>
+        ))}
+      </div>
+      <div class="reveal" data-reveal style="margin-top: var(--space-xl);">
+        <a href="/blog" class="link link--underline" style="font-weight: 500;">
+          All posts &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <TechStack />
 </BaseLayout>
+
+<script>
+  // Scroll reveal (same as ScrollReveal component — inline for homepage)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.getAttribute('data-delay') || '0';
+            entry.target.style.transitionDelay = `${delay}ms`;
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+  }
+</script>
+
+<style>
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Projects Grid */
+  .projects-grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  /* Writing Cards */
+  .writing-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .writing-card {
+    display: block;
+    padding-block: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: transform var(--transition-fast);
+  }
+
+  .writing-card:last-child {
+    border-bottom: none;
+  }
+
+  .writing-card:hover {
+    transform: translateX(2px);
+  }
+
+  .writing-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .writing-card__separator {
+    opacity: 0.5;
+  }
+
+  .writing-card__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .writing-card:hover .writing-card__title {
+    color: var(--color-accent);
+  }
+
+  .writing-card__desc {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+  }
+</style>
