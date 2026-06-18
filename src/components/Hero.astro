@@ -1,0 +1,104 @@
+---
+const ctaLinks = [
+  { href: '/#projects', label: 'See Projects', primary: false },
+  { href: '/blog', label: 'Read Writing', primary: true },
+];
+---
+
+<section class="hero" id="about">
+  <div class="hero__inner container section">
+    <p class="hero__greeting reveal">Hello, I'm</p>
+    <h1 class="hero__name reveal">Harun Albayrak</h1>
+    <p class="hero__tagline reveal">
+      A full-stack software engineer who builds thoughtful products and writes about the craft of making software. I care about clarity, simplicity, and the small details that make things feel right.
+    </p>
+    <div class="hero__actions reveal">
+      {ctaLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={['hero__cta', { 'hero__cta--primary': link.primary }]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero__inner {
+    padding-top: var(--space-4xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  .hero__greeting {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero__name {
+    font-family: var(--font-serif);
+    font-size: var(--text-4xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__tagline {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    max-width: 540px;
+    margin-bottom: var(--space-xl);
+    line-height: var(--leading-relaxed);
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .hero__cta--primary {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .hero__cta--primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .hero__cta:not(.hero__cta--primary) {
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .hero__cta:not(.hero__cta--primary):hover {
+    border-color: var(--color-text-tertiary);
+    color: var(--color-text-primary);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 768px) {
+    .hero__inner {
+      padding-top: var(--space-3xl);
+    }
+
+    .hero__name {
+      font-size: var(--text-3xl);
+    }
+  }
+</style>
